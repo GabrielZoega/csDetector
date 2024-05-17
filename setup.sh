@@ -38,10 +38,6 @@ else
   fi
 fi
 
-# download resources
-wget http://sentistrength.wlv.ac.uk/jkpop/SentiStrength.jar -P ./senti
-wget http://sentistrength.wlv.ac.uk/jkpop/SentiStrength_Data.zip -P ./senti
-
 # extract to folder
 unzip ./senti/SentiStrength_Data.zip -d ./senti/SentiStrength_Data
 
