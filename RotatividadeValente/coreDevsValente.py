@@ -29,7 +29,11 @@ def coreDevs (path):
     core_devs_number = commits_per_author["dev_percentage"].size
     print("Core Devs: {}".format(core_devs_number))
     #print(commits_per_author)   Caso queira saber quem são os CoreDevs descomente esta linha
-    return core_devs_number
+    
+    conjuntoDevs = set()
+    for c in range(commits_per_author["dev_percentage"].size):
+        conjuntoDevs.add(commits_per_author.loc[c][0])
+    return conjuntoDevs
     
 # Lendo os arquivos do csv "commits_per_author"
 paths = argv[1].split(",")
@@ -40,10 +44,10 @@ SetB = coreDevs(paths[1])
 
 # Calculando a Core Dev Leaver Rate (CDLrate)
 CDL = SetA - SetB
-CDLrate = (abs(CDL) / abs(SetA)) * 100
+CDLrate = (len(CDL) / len(SetA)) * 100
 
 #Calculando a Core Developer Turnover (CDTrate)
-CDTrate = (abs(CDL) / ((abs(SetA) + abs(SetB)) / 2)) * 100
+CDTrate = (len(CDL) / ((len(SetA) + len(SetB)) / 2)) * 100
 
 # Exibindo o resultado:
 print("CDL: {}".format(CDL))
