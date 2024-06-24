@@ -100,3 +100,23 @@ python main.py -p <GitHub_PAT> -g <Google_API_Key> -r <repository_url> -m 6 -s <
 
 Para mais detalhes e uso avançado, consulte o README no [Repositório da CSDETECTOR](https://github.com/Nuri22/csDetector).
 
+
+
+# Utilizando o Teste de Rotatividade de Core-Devs
+
+- **Info**: O artigo com as informações sobre o teste, desenvolvido pelos autores: Marco Tulio Valente, Luciana Lourdes Silva e Fabio Ferreira, pode ser encontrado aqui: [Artigo](https://www.researchgate.net/publication/344078871_Turnover_in_Open-Source_Projects_The_Case_of_Core_Developers).
+- O teste foi adicionado para auxiliar as pesquisas da equipe [ColMiner](http://nupessc.caf.ufv.br/#/home), utilizando o teste em conjunto com a CSDETECTOR.
+
+Navegue até o diretório raiz da ferramenta CSDETECTOR e entre na pasta Rotatividade em seu terminal antes de executar os seguintes comandos.
+
+```bash
+cd /path/to/csDetector/Rotatividade
+```
+
+Execute o script `rotatividadeCoreDevs.py` com os argumentos necessários:
+
+```bash
+python rotatividadeCoreDevs.py <Path_to_csv_commitsPerAuthor>
+```
+
+- **Path To CSV Commits Per Author**: Caminho do arquivo "commitsPerAuthor" gerado ao executar a CSDETECTOR. Por padrão é gerado em: path/to/csDetector/out/nomeDoRepoUsado/results/metrics/commitsPerAuthor.csv
