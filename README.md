@@ -121,7 +121,7 @@ python rotatividadeCoreDevs.py <Path_to_csv_commitsPerAuthor>
 
 - **Path To CSV Commits Per Author**: Caminho do arquivo "commitsPerAuthor" gerado ao executar a CSDETECTOR. Por padrão é gerado em: path/to/csDetector/out/nomeDoRepoUsado/results/metrics/commitsPerAuthor.csv
 
-- # Utilizando o índice de Diversidade de Blau
+# Utilizando o índice de Diversidade de Blau
 - Navegue até o diretório raiz da ferramenta CSDETECTOR e entre na pasta Rotatividade em seu terminal antes de executar os seguintes comandos.
 
 ```bash
