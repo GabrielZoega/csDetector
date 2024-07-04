@@ -51,5 +51,25 @@ def calculaIndiceDeDiversidadeDeBlau(caminhoArquivoTimezones_0, caminhoArquivoTi
 
 caminhoArquivos = argv[1].split(",")
 
-b = calculaIndiceDeDiversidadeDeBlau(caminhoArquivos[0], caminhoArquivos[1], timezone, generoContribuidores)
-print(f"{b:.2f}")
+flag = 0 #Para calcular somente para gênero
+
+if(len(caminhoArquivos) < 2):
+    flag = 1
+
+if flag == 1:
+    def calculaIndiceDeDiversidadeDeBlau(caminhoArquivoTimeRepo, generoContribuidores):
+        equipe = generoContribuidores(caminhoArquivoTimeRepo)
+        qtdTotalContribuidores = sum(equipe.values())
+        proporcaoGeneroEquipe = {chave: valor/qtdTotalContribuidores for chave, valor in equipe.items()}
+        proporcaoGeneroEquipe = {chave: valor ** 2 for chave, valor in proporcaoGeneroEquipe.items()}
+        somaEquipe = sum(proporcaoGeneroEquipe.values())
+        blau = 1 - somaEquipe
+        return blau
+    
+    b = calculaIndiceDeDiversidadeDeBlau(caminhoArquivos[0], generoContribuidores)
+    print(f"{b:.2f}")
+
+else:
+    b = calculaIndiceDeDiversidadeDeBlau(caminhoArquivos[0], caminhoArquivos[1], timezone, generoContribuidores)
+    print(f"{b:.2f}")
+
