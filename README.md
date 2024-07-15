@@ -120,3 +120,18 @@ python rotatividadeCoreDevs.py <Path_to_csv_commitsPerAuthor>
 ```
 
 - **Path To CSV Commits Per Author**: Caminho do arquivo "commitsPerAuthor" gerado ao executar a CSDETECTOR. Por padrão é gerado em: path/to/csDetector/out/nomeDoRepoUsado/results/metrics/commitsPerAuthor.csv
+
+# Utilizando o índice de Diversidade de Blau
+- Navegue até o diretório raiz da ferramenta CSDETECTOR e entre na pasta Rotatividade em seu terminal antes de executar os seguintes comandos.
+
+```bash
+cd /path/to/csDetector/Rotatividade
+```
+Antes de executar o arquivo é preciso que seja criada uma planilha contendo as colunas: "Homens","Mulheres","Indefinido". Salve-a num diretório local de sua preferência
+
+**Path To CSV Timezones**: Caminho do arquivo "timezones" gerado ao executar a CSDETECTOR. Por padrão é gerado em: path/to/csDetector/out/nomeDoRepoUsado/results/metrics/timezones_0.csv
+
+Execute o script `blau.py` com os argumentos necessários:
+```bash
+python blau.py <Path_to_csv_timezones_0,Path_to_csv_timeRepo>
+```
