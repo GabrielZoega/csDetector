@@ -1,86 +1,86 @@
 import pandas as pd
 from sys import argv
 
-#converte para a devida UTC e a organiza de forma crescente
+# Converte para a devida UTC e organiza de forma crescente
 def timezone(caminhoArquivoTimezones_0):
     timezones = pd.read_csv(caminhoArquivoTimezones_0)
-    timezones.sort_values(['Timezone Offset'], inplace = True)
-    utcs = [k/3600 for k in timezones['Timezone Offset']]
+    timezones.sort_values(['Timezone Offset'], inplace=True)
+    utcs = [k / 3600 for k in timezones['Timezone Offset']]
     grupoUtc = {item: None for item in utcs}
     author_count = timezones['Author Count']
     grupoUtc = {utcs[i]: author_count[i] for i in range(len(utcs))}
     return grupoUtc
 
-#coloca num dicionário a quantidade de membros de cada gênero na planilha dos contribuidores
+# Coloca num dicionário a quantidade de membros de cada gênero na planilha dos contribuidores
 def generoContribuidores(caminhoArquivoTimeRepo):
     contribuidores = pd.read_csv(caminhoArquivoTimeRepo)
     homens = contribuidores['Homens']
     mulheres = contribuidores['Mulheres']
-    
+
     totalHomens = homens.sum()
     totalMulheres = mulheres.sum()
 
-    return {'H':totalHomens, 'M':totalMulheres}
+    return {'H': totalHomens, 'M': totalMulheres}
 
-#calcula o índice de diversidade de blau
+# Calcula o índice de Blau para uma única dimensão
+def calculaBlau(proporcoes):
+    proporcoes = {chave: valor ** 2 for chave, valor in proporcoes.items()}
+    somaProporcoes = sum(proporcoes.values())
+    blau = 1 - somaProporcoes
+    return blau
+
+# Calcula o índice de diversidade de Blau
 def calculaIndiceDeDiversidadeDeBlau(caminhoArquivoTimezones_0, caminhoArquivoTimeRepo, timezone, generoContribuidores):
     timeZone = timezone(caminhoArquivoTimezones_0)
     equipe = generoContribuidores(caminhoArquivoTimeRepo)
-    
-    #encontra a quantidade de membros de cada categoria
+
+    # Calcula a proporção dos elementos para cada categoria
     qtdTotalTimeZones = sum(timeZone.values())
+    proporcaoTimeZones = {chave: valor / qtdTotalTimeZones for chave, valor in timeZone.items()}
+
     qtdTotalContribuidores = sum(equipe.values())
-    
-    #calcula a proporção dos elementos para cada categoria
-    proporcaoTimeZones = {chave: valor/qtdTotalTimeZones for chave, valor in timeZone.items()}
-    proporcaoGeneroEquipe = {chave: valor/qtdTotalContribuidores for chave, valor in equipe.items()}
+    proporcaoGeneroEquipe = {chave: valor / qtdTotalContribuidores for chave, valor in equipe.items()}
 
-    #eleva as proporções ao quadrado
-    proporcaoTimeZones = {chave: valor ** 2 for chave , valor in proporcaoTimeZones.items()}
-    proporcaoGeneroEquipe = {chave: valor ** 2 for chave, valor in proporcaoGeneroEquipe.items()}
-    
-    #soma o somatório das duas
-    somaTimeZone = sum(proporcaoTimeZones.values())
-    somaEquipe = sum(proporcaoGeneroEquipe.values())
-    
-    #subtrai 1
-    blau = 1 - (somaTimeZone + somaEquipe)
-    return blau;
+    # Calcula os índices de Blau separadamente
+    blauTimeZone = calculaBlau(proporcaoTimeZones)
+    blauGenero = calculaBlau(proporcaoGeneroEquipe)
 
+    # Combina os índices de Blau (aqui fazemos uma média aritmética)
+    blau = (blauTimeZone + blauGenero) / 2
+    return blau
+
+# Obtém os caminhos dos arquivos de entrada
 caminhoArquivos = argv[1].split(",")
 
-flag = 0 #Para calcular somente para gênero ou somente para timezone
+flag = 0  # Para calcular somente para gênero ou somente para timezone
 
-if(len(caminhoArquivos) < 2):
+if len(caminhoArquivos) < 2:
     flag = 1
 
 if flag == 1:
-    if("timezones_0.csv" in caminhoArquivos[0]):
-        def calculaIndiceDeDiversidadeDeBlau(caminhoArquivoTimezones_0, timezone):
+    if "timezones_0.csv" in caminhoArquivos[0]:
+        def calculaIndiceDeDiversidadeDeBlauTimezone(caminhoArquivoTimezones_0, timezone):
             timeZone = timezone(caminhoArquivoTimezones_0)
             qtdTotalTimeZones = sum(timeZone.values())
-            proporcaoTimeZones = {chave: valor/qtdTotalTimeZones for chave, valor in timeZone.items()}
-            proporcaoTimeZones = {chave: valor ** 2 for chave , valor in proporcaoTimeZones.items()}
-            somaTimeZone = sum(proporcaoTimeZones.values())
-            blau = 1 - somaTimeZone
+            proporcaoTimeZones = {chave: valor / qtdTotalTimeZones for chave, valor in timeZone.items()}
+            blau = calculaBlau(proporcaoTimeZones)
             return blau
-    
-        b = calculaIndiceDeDiversidadeDeBlau(caminhoArquivos[0], timezone)
+
+        b = calculaIndiceDeDiversidadeDeBlauTimezone(caminhoArquivos[0], timezone)
         print(f"{b:.2f}")
 
     else:
-        def calculaIndiceDeDiversidadeDeBlau(caminhoArquivoTimeRepo, generoContribuidores):
+        def calculaIndiceDeDiversidadeDeBlauGenero(caminhoArquivoTimeRepo, generoContribuidores):
             equipe = generoContribuidores(caminhoArquivoTimeRepo)
             qtdTotalContribuidores = sum(equipe.values())
-            proporcaoGeneroEquipe = {chave: valor/qtdTotalContribuidores for chave, valor in equipe.items()}
-            proporcaoGeneroEquipe = {chave: valor ** 2 for chave, valor in proporcaoGeneroEquipe.items()}
-            somaEquipe = sum(proporcaoGeneroEquipe.values())
-            blau = 1 - somaEquipe
+            proporcaoGeneroEquipe = {chave: valor / qtdTotalContribuidores for chave, valor in equipe.items()}
+            blau = calculaBlau(proporcaoGeneroEquipe)
             return blau
-        
-        b = calculaIndiceDeDiversidadeDeBlau(caminhoArquivos[0], generoContribuidores)
+
+        b = calculaIndiceDeDiversidadeDeBlauGenero(caminhoArquivos[0], generoContribuidores)
         print(f"{b:.2f}")
 
 else:
     b = calculaIndiceDeDiversidadeDeBlau(caminhoArquivos[0], caminhoArquivos[1], timezone, generoContribuidores)
-    print(f"{-1*b:.2f}")
+    print(f"{b:.2f}")
+
